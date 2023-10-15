@@ -1,6 +1,16 @@
+import streamlit as st
 import cv2
 import numpy as np
 import tensorflow as tf
+
+@st.cache(allow_output_mutation=True)
+def load_model():
+  model=tf.keras.models.load_model('facemaskweights.h5')
+  return model
+model=load_model()
+st.write("""
+# Mask Detection System"""
+)
 
 # Load your pre-trained model
 model = tf.keras.models.load_model('C:/Users/Jethro Aurelio/Desktop/DATASETS/facemask/FacemaskModel')
