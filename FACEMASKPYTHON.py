@@ -40,4 +40,8 @@ class VideoTransformer(VideoTransformerBase):
 
         return frame
 
-webrtc_streamer(key="example", video_transformer_factory=VideoTransformer)
+webrtc_ctx = webrtc_streamer(key="example", video_transformer_factory=VideoTransformer)
+
+if webrtc_ctx.video_receiver:
+    webrtc_ctx.video_receiver.on_data(data)
+
