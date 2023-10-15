@@ -1,4 +1,3 @@
-
 import streamlit as st
 from streamlit_webrtc import VideoTransformerBase, webrtc_streamer
 from PIL import Image
@@ -49,7 +48,6 @@ class VideoTransformer(VideoTransformerBase):
         frm = frame.to_ndarray(format="bgr24")
 
         faces = cascade.detectMultiScale(cv2.cvtColor(frm, cv2.COLOR_BGR2GRAY), 1.1, 3)
-        
 
         for x, y, w, h in faces:
             cv2.rectangle(frm, (x, y), (x + w, y + h), (0, 255, 0), 3)
@@ -61,3 +59,5 @@ webrtc_ctx = webrtc_streamer(key="key", video_processor_factory=VideoTransformer
                 rtc_configuration=RTCConfiguration(
                     {"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}
                 ))
+
+instead of the preprocessed_frame i want the model to predict the live video feed where should i put the model.predict()
