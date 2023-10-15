@@ -64,7 +64,7 @@ class VideoTransformer(VideoTransformerBase):
         # Overlay the label on the frame
         cv2.putText(frame, label, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
-        return av.VideoFrame.from_ndarray(frm, format='bgr24'), frame
+        #return av.VideoFrame.from_ndarray(frm, format='bgr24'), frame
         
 
 
