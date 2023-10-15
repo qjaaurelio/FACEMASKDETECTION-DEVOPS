@@ -52,6 +52,21 @@ class VideoTransformer(VideoTransformerBase):
         for x, y, w, h in faces:
             cv2.rectangle(frm, (x, y), (x + w, y + h), (0, 255, 0), 3)
 
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)  # Convert BGR to RGB
+        preprocessed_frame = preprocess_frame(frame)
+        predictions = model.predict(preprocessed_frame)
+
+        if predictions[0][0] < 0.5:
+            label = "With Mask"
+        else:
+            label = "Without Mask"
+
+        # Overlay the label on the frame
+        cv2.putText(frame, label, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+
+        return frame
+
+
         return av.VideoFrame.from_ndarray(frm, format='bgr24')
 
 
@@ -59,11 +74,7 @@ webrtc_ctx = webrtc_streamer(key="key", video_processor_factory=VideoTransformer
                 rtc_configuration=RTCConfiguration(
                     {"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}
                 ))
-# After the label is determined, add some debugging information
-print(f"Label: {label}")
 
-# Overlay the label on the frame
-cv2.putText(frame, label, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
 
 
