@@ -5,7 +5,7 @@ import numpy as np
 import tensorflow as tf
 import cv2
 
-@st.cache
+@st.cache_resource
 def load_model():
     model = tf.keras.models.load_model('FacemaskModel')
     return model
