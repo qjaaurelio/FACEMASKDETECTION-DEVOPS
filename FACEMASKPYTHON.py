@@ -59,6 +59,11 @@ webrtc_ctx = webrtc_streamer(key="key", video_processor_factory=VideoTransformer
                 rtc_configuration=RTCConfiguration(
                     {"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}
                 ))
+# After the label is determined, add some debugging information
+print(f"Label: {label}")
+
+# Overlay the label on the frame
+cv2.putText(frame, label, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
 
 
