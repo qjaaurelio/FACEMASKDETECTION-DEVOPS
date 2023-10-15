@@ -7,7 +7,7 @@ import cv2
 
 @st.cache(allow_output_mutation=True)
 def load_model():
-    model = tf.keras.models.load_model('FacemaskModel')
+    model = tf.keras.models load_model('FacemaskModel')
     return model
 
 model = load_model()
@@ -40,7 +40,5 @@ class VideoTransformer(VideoTransformerBase):
 
         return frame
 
-webrtc_ctx = webrtc_streamer(key="example", video_transformer_factory=VideoTransformer)
+webrtc_ctx = webrtc_streamer(key="example", video_processor_factory=VideoTransformer)
 
-if webrtc_ctx.video_receiver:
-    webrtc_ctx.video_receiver.on_data(data)
