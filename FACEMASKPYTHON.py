@@ -1,8 +1,8 @@
 import streamlit as st
-import tensorflow as tf
 from streamlit_webrtc import VideoTransformerBase, webrtc_streamer
 from PIL import Image, ImageOps
 import numpy as np
+import tensorflow as tf
 import cv2
 
 @st.cache(allow_output_mutation=True)
