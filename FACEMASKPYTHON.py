@@ -37,14 +37,13 @@ class VideoTransformer(VideoTransformerBase):
         for x, y, w, h in faces:
             cv2.rectangle(frm, (x, y), (x + w, y + h), (0, 255, 0), 3)
 
-        # Mask detection
         preprocessed_frame = preprocess_frame(frame)
         predictions = model.predict(preprocessed_frame)
         if predictions[0][0] < 0.5:
             label = "With Mask"
         else:
             label = "Without Mask"
-            cv2.putText(frm, label, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+        cv2.putText(frm, label, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
         return av.VideoFrame.from_ndarray(frm, format='bgr24')
 
