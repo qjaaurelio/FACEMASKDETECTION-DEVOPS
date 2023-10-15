@@ -1,3 +1,4 @@
+
 import streamlit as st
 from streamlit_webrtc import VideoTransformerBase, webrtc_streamer
 from PIL import Image
@@ -31,7 +32,6 @@ def preprocess_frame(frame):
 class VideoTransformer(VideoTransformerBase):
     def transform(self, frame):
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)  # Convert BGR to RGB
-        
         preprocessed_frame = preprocess_frame(frame)
         predictions = model.predict(preprocessed_frame)
 
@@ -46,22 +46,17 @@ class VideoTransformer(VideoTransformerBase):
         return frame
 
     def recv(self, frame):
-		frm = frame.to_ndarray(format="bgr24")
+        frm = frame.to_ndarray(format="bgr24")
 
-		faces = cascade.detectMultiScale(cv2.cvtColor(frm, cv2.COLOR_BGR2GRAY), 1.1, 3)
+        faces = cascade.detectMultiScale(cv2.cvtColor(frm, cv2.COLOR_BGR2GRAY), 1.1, 3)
 
-		for x,y,w,h in faces:
-			cv2.rectangle(frm, (x,y), (x+w, y+h), (0,255,0), 3)
+        for x, y, w, h in faces:
+            cv2.rectangle(frm, (x, y), (x + w, y + h), (0, 255, 0), 3)
 
-		return av.VideoFrame.from_ndarray(frm, format='bgr24')
-        
+        return av.VideoFrame.from_ndarray(frm, format='bgr24')
 
 
 webrtc_ctx = webrtc_streamer(key="key", video_processor_factory=VideoTransformer,
                 rtc_configuration=RTCConfiguration(
                     {"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}
                 ))
-
-
-
-
