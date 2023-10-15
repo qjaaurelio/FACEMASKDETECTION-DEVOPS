@@ -7,6 +7,8 @@ import cv2
 from streamlit_webrtc import RTCConfiguration
 import av
 
+cascade = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
+
 @st.cache_resource
 def load_model():
     model = tf.keras.models.load_model('FacemaskModel')
