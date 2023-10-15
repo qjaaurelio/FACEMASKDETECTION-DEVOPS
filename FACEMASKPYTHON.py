@@ -40,5 +40,10 @@ class VideoTransformer(VideoTransformerBase):
 
         return frame
 
-webrtc_ctx = webrtc_streamer(key="example", video_processor_factory=VideoTransformer)
+webrtc_ctx = webrtc_streamer(key="key", video_processor_factory=VideoProcessor,
+				rtc_configuration=RTCConfiguration(
+					{"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}
+					)
+
+
 
