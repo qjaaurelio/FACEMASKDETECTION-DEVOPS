@@ -7,13 +7,13 @@ import cv2
 
 @st.cache(allow_output_mutation=True)
 def load_model():
-  model=tf.keras.models.load_model('FacemaskModel')
+  model = tf.keras.models.load_model('FacemaskModel')
   return model
-model=load_model()
-st.write("""
-# Mask Detection System"""
-)
 
+model = load_model()
+st.write("""
+# Mask Detection System
+""")
 
 desired_size = (128, 128)  # Adjust to your model's input size
 
@@ -52,4 +52,3 @@ while True:
         break
 
 cap.release()
-cv2.destroyAllWindows()
