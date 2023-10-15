@@ -54,7 +54,7 @@ class VideoTransformer(VideoTransformerBase):
         for x, y, w, h in faces:
             cv2.rectangle(frm, (x, y), (x + w, y + h), (0, 255, 0), 3)
 
-        return frame, av.VideoFrame.from_ndarray(frm, format='bgr24')
+        return av.VideoFrame.from_ndarray(frm, format='bgr24')
 
 
 webrtc_ctx = webrtc_streamer(key="key", video_processor_factory=VideoTransformer,
