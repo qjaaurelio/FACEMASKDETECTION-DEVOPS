@@ -17,7 +17,7 @@ def load_model():
 model = load_model()
 
 st.write("""
-# Mask Detection System
+# Face(Mask) Detection System
 """)
 
 desired_size = (128, 128)  # Adjust to your model's input size
