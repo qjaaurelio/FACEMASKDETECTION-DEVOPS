@@ -59,5 +59,3 @@ webrtc_ctx = webrtc_streamer(key="key", video_processor_factory=VideoTransformer
                 rtc_configuration=RTCConfiguration(
                     {"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}
                 ))
-
-instead of the preprocessed_frame i want the model to predict the live video feed where should i put the model.predict()
