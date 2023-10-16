@@ -29,17 +29,17 @@ def preprocess_frame(frame):
     return frame
 
 class VideoProcessor:
-	def recv(self, frame):
-		frm = frame.to_ndarray(format="bgr24")
+	#def recv(self, frame):
+		#frm = frame.to_ndarray(format="bgr24")
 	
-		faces = cascade.detectMultiScale(cv2.cvtColor(frm, cv2.COLOR_BGR2GRAY), 1.1, 3)
+		#faces = cascade.detectMultiScale(cv2.cvtColor(frm, cv2.COLOR_BGR2GRAY), 1.1, 3)
 	
-		for x,y,w,h in faces:
-			cv2.rectangle(frm, (x,y), (x+w, y+h), (0,255,0), 3)
-			label = "Without Mask"  # Example label, replace it with your logic
-			cv2.putText(frm, label, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+		#for x,y,w,h in faces:
+			#cv2.rectangle(frm, (x,y), (x+w, y+h), (0,255,0), 3)
+			#label = "Without Mask"  # Example label, replace it with your logic
+			#cv2.putText(frm, label, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
 	
-		return av.VideoFrame.from_ndarray(frm, format='bgr24')
+		#return av.VideoFrame.from_ndarray(frm, format='bgr24')
 		
 	
 	def transform(self, frame):
