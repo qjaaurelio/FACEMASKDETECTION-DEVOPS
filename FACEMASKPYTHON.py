@@ -39,15 +39,17 @@ class VideoProcessor:
 			#label = "With Mask"  # Example label, replace it with your logic
 			#cv2.putText(frm, label, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
 
-		return av.VideoFrame.from_ndarray(frm, format='bgr24')
+		
         
-    	predictions = model.predict(faces)
-    	if predictions[0][0] < 0.5:
-            label = "With Mask"
-        else:
-            label = "Without Mask"
-    		
-        cv2.putText(frm, label, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+	    	#predictions = model.predict(faces)
+	    	#if predictions[0][0] < 0.5:
+	            #label = "With Mask"
+	       # else:
+	       #     label = "Without Mask"
+	    		
+	       # cv2.putText(frm, label, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+	
+		return av.VideoFrame.from_ndarray(frm, format='bgr24')
 
 
    # def recv(self, frame):
