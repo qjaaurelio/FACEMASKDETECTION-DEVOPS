@@ -28,12 +28,12 @@ def preprocess_frame(frame):
     frame = np.expand_dims(frame, axis=0)  # Add batch dimension
     return frame
 
-class VideoProcessor(VideoTransformerBase):
+class VideoProcessor:
 	def recv(self, frame):
 		frm = frame.to_ndarray(format="bgr24")
-
+	
 		faces = cascade.detectMultiScale(cv2.cvtColor(frm, cv2.COLOR_BGR2GRAY), 1.1, 3)
-
+	
 		for x,y,w,h in faces:
 			cv2.rectangle(frm, (x,y), (x+w, y+h), (0,255,0), 3)
 			label = "Without Mask"  # Example label, replace it with your logic
@@ -41,21 +41,21 @@ class VideoProcessor(VideoTransformerBase):
 	
 		return av.VideoFrame.from_ndarray(frm, format='bgr24')
 		
-class VideoProcessor:
-    def transform(self, frame):
-        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)  # Convert BGR to RGB
-        preprocessed_frame = preprocess_frame(frame)
-        predictions = model.predict(preprocessed_frame)
-
-        if predictions[0][0] < 0.5:
-            label = "With Mask"
-        else:
-            label = "Without Mask"
-
-        # Overlay the label on the frame
-        cv2.putText(frame, label, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
-
-        return frame
+	
+	def transform(self, frame):
+	frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)  # Convert BGR to RGB
+	preprocessed_frame = preprocess_frame(frame)
+	predictions = model.predict(preprocessed_frame)
+	
+	if predictions[0][0] < 0.5:
+	    label = "With Mask"
+	else:
+	    label = "Without Mask"
+	
+	# Overlay the label on the frame
+	cv2.putText(frame, label, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+	
+	return frame
 
 
 
