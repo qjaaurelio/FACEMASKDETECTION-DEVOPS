@@ -43,19 +43,19 @@ class VideoProcessor:
 		
 	
 	def transform(self, frame):
-	frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)  # Convert BGR to RGB
-	preprocessed_frame = preprocess_frame(frame)
-	predictions = model.predict(preprocessed_frame)
-	
-	if predictions[0][0] < 0.5:
-	    label = "With Mask"
-	else:
-	    label = "Without Mask"
-	
-	# Overlay the label on the frame
-	cv2.putText(frame, label, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
-	
-	return frame
+		frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)  # Convert BGR to RGB
+		preprocessed_frame = preprocess_frame(frame)
+		predictions = model.predict(preprocessed_frame)
+		
+		if predictions[0][0] < 0.5:
+		    label = "With Mask"
+		else:
+		    label = "Without Mask"
+		
+		# Overlay the label on the frame
+		cv2.putText(frame, label, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+		
+		return frame
 
 
 
