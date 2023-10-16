@@ -37,9 +37,13 @@ class VideoProcessor:
         for x, y, w, h in faces:
             cv2.rectangle(frm, (x, y), (x + w, y + h), (0, 255, 0), 3)
             
-            # Make predictions here
+            # Extract the face region for prediction
+            face_roi = frm[y:y+h, x:x+w]
+            
+            # Make predictions for the extracted face region
             # Replace the following lines with your actual prediction logic
-            predictions = model.predict(faces)
+            predictions = model.predict(face_roi)
+            
             if predictions[0][0] < 0.5:
                 label = "With Mask"
             else:
@@ -49,6 +53,7 @@ class VideoProcessor:
             cv2.putText(frm, label, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
 
         return av.VideoFrame.from_ndarray(frm, format='bgr24')
+
 
    # def recv(self, frame):
    #     frm = frame.to_ndarray(format="bgr24")
