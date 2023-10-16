@@ -14,7 +14,7 @@ st.write("""
 """)
 
 # Load your model
-@st.cache(allow_output_mutation=True)
+@st.cache_resource
 def load_model():
     model = tf.keras.models.load_model('FacemaskModel')
     return model
