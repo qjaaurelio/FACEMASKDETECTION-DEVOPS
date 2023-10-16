@@ -33,12 +33,12 @@ class VideoTransformer(VideoTransformerBase):
         frm = frame.to_ndarray(format="bgr24")
 
         faces = cascade.detectMultiScale(cv2.cvtColor(frm, cv2.COLOR_BGR2GRAY), 1.1, 3)
-        predictions = model.predict(faces)
+        #predictions = model.predict(faces)
 
-        if predictions[0][0] < 0.5:
-            label = "With Mask"
-        else:
-            label = "Without Mask"
+        #if predictions[0][0] < 0.5:
+            #label = "With Mask"
+        #else:
+            #label = "Without Mask"
 
         # Overlay the label on the frame
         cv2.putText(frame, label, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
