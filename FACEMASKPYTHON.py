@@ -29,7 +29,7 @@ def preprocess_frame(frame):
     return frame
 
 class VideoTransformer(VideoTransformerBase):
-    def transform(self, frame):
+    def recv(self, frame):
         frame = frame.to_ndarray(format="bgr24")  # Convert BGR to RGB
         preprocessed_frame = preprocess_frame(frame)
         faces = cascade.detectMultiScale(cv2.cvtColor(frm, cv2.COLOR_BGR2GRAY), 1.1, 3)
