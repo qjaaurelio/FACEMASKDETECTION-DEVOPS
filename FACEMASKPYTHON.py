@@ -33,6 +33,9 @@ class VideoTransformer(VideoTransformerBase):
         frm = frame.to_ndarray(format="bgr24")
 
         faces = cascade.detectMultiScale(cv2.cvtColor(frm, cv2.COLOR_BGR2GRAY), 1.1, 3)
+        label = "With Mask"
+        cv2.putText(frm, label, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+        
         #predictions = model.predict(faces)
 
         #if predictions[0][0] < 0.5:
