@@ -36,8 +36,8 @@ class VideoProcessor:
 
 		for x,y,w,h in faces:
 			cv2.rectangle(frm, (x,y), (x+w, y+h), (0,255,0), 3)
-			#label = "With Mask"  # Example label, replace it with your logic
-			#cv2.putText(frm, label, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+			label = "With Mask"  # Example label, replace it with your logic
+			cv2.putText(frm, label, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
 
 		
         
