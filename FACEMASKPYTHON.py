@@ -28,56 +28,33 @@ def preprocess_frame(frame):
     frame = np.expand_dims(frame, axis=0)  # Add batch dimension
     return frame
 
-class VideoProcessor:
-	def recv(self, frame):
-		frm = frame.to_ndarray(format="bgr24")
+webrtc_ctx = webrtc_streamer(key="key", rtc_configuration=RTCConfiguration(
+    {"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}
+))
 
-		faces = cascade.detectMultiScale(cv2.cvtColor(frm, cv2.COLOR_BGR2GRAY), 1.1, 3)
+if webrtc_ctx.state.playing:
+    while True:
+        video_frame = webrtc_ctx.video_receiver.recv()
+        if video_frame is None:
+            continue
 
-		for x,y,w,h in faces:
-			cv2.rectangle(frm, (x,y), (x+w, y+h), (0,255,0), 3)
-			#label = "With Mask"  # Example label, replace it with your logic
-			#cv2.putText(frm, label, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+        frm = video_frame.to_ndarray(format="bgr24")
 
-		
-        
-	    	#predictions = model.predict(faces)
-	    	#if predictions[0][0] < 0.5:
-	            #label = "With Mask"
-	       # else:
-	       #     label = "Without Mask"
-	    		
-	       # cv2.putText(frm, label, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
-	
-		return av.VideoFrame.from_ndarray(frm, format='bgr24')
-		
-	def transform(self, frame):
-	        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)  # Convert BGR to RGB
-	        preprocessed_frame = preprocess_frame(frame)
-	        predictions = model.predict(preprocessed_frame)
-	
-	        if predictions[0][0] < 0.5:
-	            label = "With Mask"
-	        else:
-	            label = "Without Mask"
-	
-	        # Overlay the label on the frame
-	        cv2.putText(frame, label, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
-	
-	        return frame
+        faces = cascade.detectMultiScale(cv2.cvtColor(frm, cv2.COLOR_BGR2GRAY), 1.1, 3)
 
-   # def recv(self, frame):
-   #     frm = frame.to_ndarray(format="bgr24")
+        for x, y, w, h in faces:
+            cv2.rectangle(frm, (x, y), (x + w, y + h), (0, 255, 0), 3)
 
-    #    faces = cascade.detectMultiScale(cv2.cvtColor(frm, cv2.COLOR_BGR2GRAY), 1.1, 3)
+            face_roi = frm[y:y+h, x:x+w]
+            preprocessed_face = preprocess_frame(face_roi)
+            predictions = model.predict(preprocessed_face)
 
-    #    for x, y, w, h in faces:
-    #        cv2.rectangle(frm, (x, y), (x + w, y + h), (0, 255, 0), 3)
+            if predictions[0][0] < 0.5:
+                label = "With Mask"
+            else:
+                label = "Without Mask"
 
-    #    return av.VideoFrame.from_ndarray(frm, format='bgr24')
+            cv2.putText(frm, label, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
 
-
-webrtc_ctx = webrtc_streamer(key="key", video_processor_factory=VideoProcessor,
-                rtc_configuration=RTCConfiguration(
-                    {"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}
-                ))
+        video_frame = av.VideoFrame.from_ndarray(frm, format='bgr24')
+        webrtc_ctx.video_sender.send(video_frame)
