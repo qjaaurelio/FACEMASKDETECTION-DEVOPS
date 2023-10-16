@@ -1,80 +1,61 @@
 import streamlit as st
-from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
-from tensorflow.keras.preprocessing.image import img_to_array
-from tensorflow.keras.models import load_model
+from streamlit_webrtc import VideoTransformerBase, webrtc_streamer
 from PIL import Image
 import numpy as np
+import tensorflow as tf
 import cv2
-import os
+from streamlit_webrtc import RTCConfiguration
+import av
 
+cascade = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
 
-@st.cache(hash_funcs={cv2.dnn_Net: hash})
-def load_face_detector():
-    prototxt_path = os.path.sep.join(["CAFFEE", "deploy.prototxt"])
-    weights_path = os.path.sep.join(["CAFFEE", "res10_300x300_ssd_iter_140000.caffemodel"])
-    cnn_net = cv2.dnn.readNet(prototxt_path, weights_path)
+@st.cache_resource
+def load_model():
+    model = tf.keras.models.load_model('FacemaskModel')
+    return model
 
-    return cnn_net
-
-@st.cache(allow_output_mutation=True)
-def load_our_model():
-    cnn_model = load_model("facemaskModel")
-
-    return cnn_model
-
-image= Image.open('imageB.jpg')
-st.image(image,use_column_width=True)
+model = load_model()
 
 st.write("""
-    # Face Mask Detector By **Mohamed Sebaie** 
-    By Upload Images and it will detect **Mask** or **No Mask**.
-    ***
-    """)
+# Face(Mask) Detection System
+""")
 
-net = load_face_detector()
-model = load_our_model()
+desired_size = (128, 128)  # Adjust to your model's input size
 
-uploaded_image = st.sidebar.file_uploader("Choose a JPG, JPEG or PNG file", type=["jpg","jpeg","png"])
-confidence_value = st.sidebar.slider('Confidence:', 0.0, 1.0, 0.5, 0.1)
-if uploaded_image:
-    st.sidebar.info('Uploaded image:')
-    st.sidebar.image(uploaded_image, width=240)
-    image = cv2.imdecode(np.fromstring(uploaded_image.read(), np.uint8), 1)
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-    orig = image.copy()
-    (h, w) = image.shape[:2]
-    blob = cv2.dnn.blobFromImage(image, 1.0, (300, 300),
-                                 (104.0, 177.0, 123.0))
-    net.setInput(blob)
-    detections = net.forward()
+def preprocess_frame(frame):
+    frame = cv2.resize(frame, desired_size)
+    frame = frame.astype(np.float32) / 255.0  # Normalize to [0, 1]
+    frame = np.expand_dims(frame, axis=0)  # Add batch dimension
+    return frame
 
-    for i in range(0, detections.shape[2]):
-        confidence = detections[0, 0, i, 2]
-        if confidence > confidence_value:
-            box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
-            (startX, startY, endX, endY) = box.astype("int")
-            (startX, startY) = (max(0, startX), max(0, startY))
-            (endX, endY) = (min(w - 1, endX), min(h - 1, endY))
+class VideoTransformer(VideoTransformerBase):
+    def transform(self, frame):
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)  # Convert BGR to RGB
+        preprocessed_frame = preprocess_frame(frame)
+        predictions = model.predict(preprocessed_frame)
 
-            face = image[startY:endY, startX:endX]
-            face = cv2.cvtColor(face, cv2.COLOR_BGR2RGB)
-            face = cv2.resize(face, (224, 224))
-            face = img_to_array(face)
-            face = preprocess_input(face)
-            expanded_face = np.expand_dims(face, axis=0)
+        if predictions[0][0] < 0.5:
+            label = "With Mask"
+        else:
+            label = "Without Mask"
 
-            (mask, withoutMask) = model.predict(expanded_face)[0]
+        # Overlay the label on the frame
+        cv2.putText(frame, label, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
-            predicted_class = 0
-            label = "No Mask"
-            if mask > withoutMask:
-                label = "Mask"
-                predicted_class = 1
+        return frame
 
-            color = (0, 255, 0) if label == "Mask" else (0, 0, 255)
-            label = "{}: {:.2f}%".format(label, max(mask, withoutMask) * 100)
-            cv2.putText(image, label, (startX, startY - 10),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.45, color, 2)
-            cv2.rectangle(image, (startX, startY), (endX, endY), color, 2)
-            st.image(image, width=640)
-            st.write('### ' + label)
+   # def recv(self, frame):
+   #     frm = frame.to_ndarray(format="bgr24")
+
+    #    faces = cascade.detectMultiScale(cv2.cvtColor(frm, cv2.COLOR_BGR2GRAY), 1.1, 3)
+
+    #    for x, y, w, h in faces:
+    #        cv2.rectangle(frm, (x, y), (x + w, y + h), (0, 255, 0), 3)
+
+    #    return av.VideoFrame.from_ndarray(frm, format='bgr24')
+
+
+webrtc_ctx = webrtc_streamer(key="key", video_processor_factory=VideoTransformer,
+                rtc_configuration=RTCConfiguration(
+                    {"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}
+                ))
