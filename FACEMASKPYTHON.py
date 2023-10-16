@@ -41,7 +41,7 @@ class VideoTransformer(VideoTransformerBase):
             #label = "Without Mask"
 
         # Overlay the label on the frame
-        cv2.putText(frame, label, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+       #cv2.putText(frame, label, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
         for x, y, w, h in faces:
             cv2.rectangle(frm, (x, y), (x + w, y + h), (0, 255, 0), 3)
 
