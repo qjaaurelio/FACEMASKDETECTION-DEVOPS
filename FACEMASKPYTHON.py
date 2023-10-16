@@ -38,16 +38,16 @@ class VideoProcessor:
             cv2.rectangle(frm, (x, y), (x + w, y + h), (0, 255, 0), 3)
             
             # Extract the face region for prediction
-            face_roi = frm[y:y+h, x:x+w]
+            #face_roi = frm[y:y+h, x:x+w]
             
             # Make predictions for the extracted face region
             # Replace the following lines with your actual prediction logic
-            predictions = model.predict(face_roi)
+            #predictions = model.predict(face_roi)
             
-            if predictions[0][0] < 0.5:
-                label = "With Mask"
-            else:
-                label = "Without Mask"
+            #if predictions[0][0] < 0.5:
+                #label = "With Mask"
+            #else:
+                #label = "Without Mask"
 
             # Overlay the label on the frame
             cv2.putText(frm, label, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
