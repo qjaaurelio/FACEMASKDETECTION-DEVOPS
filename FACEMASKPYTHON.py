@@ -58,3 +58,8 @@ if webrtc_ctx.state.playing:
 
         video_frame = av.VideoFrame.from_ndarray(frm, format='bgr24')
         webrtc_ctx.video_sender.send(video_frame)
+        
+if video_frame is None:
+    st.warning("No video frame received.")
+    continue
+
