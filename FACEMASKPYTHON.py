@@ -41,9 +41,8 @@ class VideoProcessor:
 
 		return av.VideoFrame.from_ndarray(frm, format='bgr24')
         
-        predictions = model.predict(faces)
-
-        if predictions[0][0] < 0.5:
+	predictions = model.predict(faces)
+	if predictions[0][0] < 0.5:
             label = "With Mask"
         else:
             label = "Without Mask"
